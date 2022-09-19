@@ -1,0 +1,216 @@
+1. Tạo csdl QLSV
+2. Tạo project trong netbeans tùy chọn "java with maven" -> java application
+3. project file -> pom.xml khai báo để kết nối với csdl
+	<dependencies>
+        	<dependency>
+            		 <groupId>com.microsoft.sqlserver</groupId>
+             		<artifactId>mssql-jdbc</artifactId>
+             		<version>11.2.0.jre18</version>
+       		 </dependency><dependencies>
+    	</dependencies>
+4. Tải icon.rar paste vào packet icon
+5. Tạo thư mục resources (chứa các tài nguyên dự án maven) -> coppy icon vào
+-----------------------------------------------------------------------------
+6. Tạo JDialog form (ưu tiên cao) packet "iu"
+7. config sql - TCP/IP enable - port 1433
+8. pass user "demo 14332"
+--------------------------------------------------------------------
+9. Tạo form đăng nhập JDiaLog form
+	+ Xử lý btn_thoat
+---------------------------------------------------------------------
+10. Tạo form giao diện chính JFame form
+	+ Xử lý btn_thoat
+-------------------------------------------------------------------
+11. Tạo form quản lý sinh viên JPanel form
+12. Qua GiaoDien_JFame tạo đối tượng QLSV_JPanel
+13. Xử lý sự kiện khi click vào menu Quản lý sinh viên ( tự động addTab QLSV_JPanel khi lick menu QLSV ở bên GiaoDienChinh_JFame )
+	B1. Tao truong du lieu mnuQLSV_JPanel
+        B2. Neu QLSV_JPanel chua co thi tao
+        B3. Tao icon cho tab_GiaoDienChinh va addTab vao
+        B4. Hien thi QLSV_JPanel vua them vao tab_GiaoDienChinh
+14. Tạo phương thức xử lý sự kiện khi click "quản lý điểm" trên menu tương tự quản lý sinh viên (13.)
+---------------------------------------------------------------------------------------------------------------
+15. Tạo form giới thiệt trương trình JDiaLog và xử lý sự kiện ở nút btn_gioiThieu
+----------------------------------------------------------------
+16. Xử lý sự kiện khi nhấn nút Đăng xuất (btn_dangXuat) ở GiaoDienChinh_JPanel.
+	+ Tạo đối tượng DangNhap_Dialog và setVisible(true);
+	+ Đặt biệt khi vào trương trình chính rồi mới có thể sử dụng chức năng này
+	+ Sau này sẻ đọc thông tin từ csdl để cho phép đăng nhập
+---------------------------------------------------------------------------
+17. Xử lý xự kiện đơn giảng form đăng nhập (btn_dangNhap) 
+	+ với tài khoăn "admin" - sẻ xử lý = csdl sau
+-------------------------------------------------------------------------------	
+18. Xử lý khi mở giao diện chính kèm theo form đăng nhập + mở max độ rộng khung
+	+   setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+	
+19. Xử lý các btn còn lại bằng cách gọi lại các phương thức xử lý sự kiện có sẵn
+-----------------------------------------------------------------------------------------
+------------ Tạo lớp kết nói csdl -------- Đăng nhập ---
+20. Tạo class ConnectDatabase trong gói database để  kết nói csdl theo java maven
+ 	+ Connection openConnection()
+
+21. Tạo class NguoiDung trong gói model để chứa thông tin tài khoản, mk, vai trò, tạo get set construc
+	+  private String tenDangNhap, matKhau, vaiTro;
+	
+22. Tạo class NguoiDungDAO trong gói dao để chức các phương thức thực hiện thao tác + kt đăng nhập
+	+ NguoiDung KiemTraDangNhap(String tenDangNhap, String matKhau)
+
+23. Tạo class thongBao trong gói database để hiện thị thông báo theo yêu cầu
+
+	+ void ThongBao(Component lopCha, String noiDung, String tieuDe)
+	+ void ThongBaoLoi(Component lopCha, String noiDung, String tieuDe)
+	+ int ThongBaoXacNhan(Component lopCha, String noiDung, String tieuDe)
+
+24. Tạo class KiemTraDuLieuNhapVao để kiểm tra
+
+	+ void KiemTraTaiKhoanRong(JTextField filed, StringBuilder sb, String thongBaoLoi)
+	+ void KiemTraMatKhauRong(JPasswordField filed, StringBuilder sb, String thongBaoLoi)
+
+25. Mở form Đăng nhập gắn chức năng gắn trong NguoiDungDao + kiểm tra thông tin đăng nhập tài khoản + mật khẩu HỢP LỆ
+
+	+ void btnDangNhapActionPerformed(java.awt.event.ActionEvent evt)
+	+ Qua csdl QLSV nhập tài khoản mật khẩu cho người dùng
+	+ Lưu ý các câu lệnh sql có đúng không ???
+
+26. Tao lớp cho phép lưu các dữ liệu dùng chung giữa các form dữ liệu ChiaSeDuLieu
+
+	+ Tạo public static NguoiDung nguoiDangNhap; // Lưu các thông tin khi người dùng đăng nhập vào hệ thống nhận biết vai trò để phân quyền
+	+ Qua void btnDangNhapActionPerformed để thiết lập dữ liệu khi đăng nhập thành công 
+		else{ // Đăng nhập thành công -> đóng lại
+               		 ChiaSeDuLieu.nguoiDangNhap = nd; 
+                	this.dispose();}
+
+27. Xử lý hiện thị form giao diện chính rồi tới form đăng nhập
+	+  private void formWindowOpened()...
+	+ xử lý nhấn dấu x góc trái sẽ đóng toàn bộ trương trình void formWindowClosing
+
+------------------Thêm sử xóa cập nhật -------------------
+28. Tạo class SinhVien trong packet model để lưu thông tin sinh viên
+
+	+ Qua SQLServer để coppy danh sách các trường
+		SinhVien -> Scipt Table as -> INSERT To -> New Query Window 
+	+ Tạo các phương thức set get construct
+
+29. Tạo class SinhVienDAO trong packet dao để thực hiện thao tác thêm, sửa, xóa . . 
+
+	+ coppy phương thức KiemTraDangNhap qua để chỉnh sửa thành
+	+ boolean Them(SinhVien sv)
+
+30. Qua form QLSV_Jpanel để xử lý nút btn_taoMoi & btn_luu
+
+	+ void void btn_taoMoiActionPerformed()...
+	+ void btn_luuActionPerformed()...
+		private GiaoDienChinh_JFame gdc; để ThongBaoLoi()...
+	+ void btn_luuActionPerformed()....
+
+31. ở class SinhVienDAO tạo thêm phương thức CapNhat() -> coppy Them().... 
+
+	+ Coppy câu lệnh UPDATE trong SQP tương tự (28.)
+	+ Thông báo cho người dùng có chắc muốn cập nhật không
+		if(ThongBao.ThongBaoXacNhan(gdc, "Bạn có muốn cập nhật sinh viên không?", "Hỏi") == JOptionPane.NO_OPTION){
+
+32. Bổ sung chức năng xóa sinh viên theo má số sinh viên -> coppy CapNhat()... paste 
+
+	+  boolean Xoa(String maSinhVien) // Asg.P5: phút 50
+	+ mở form QLSV_Panel xử lý nút btn_xoa
+	+ hiển thị gơi ý của từng trường họ tên . . . . 
+
+33. Bổ sung phương thức tìm kiếm sinh viên theo mã và trả về sinh viên hiện có trong csdl
+	+ Coppy Xoa() paste
+	+ TimKiemSinhVien(String maSinhVien)
+	+ Coppy TimKiemSinhVien paste
+	+ List<SinhVien> TimKiemTatCaSinhVien()
+	+ Tạo hàm TaoSinhVien để không trùng lắp code 
+		Tô đen code -> Intruduce method -> .. . . 
+
+34. Mở lại from QLSV_Panel lên đầu src
+	+ Khai báo  private DefaultTableModel tblModel; 
+	+ Định nghĩa phương thức TaoBang(),
+	+ Tạo phương thức đọc và hiển thị csdl lên bảng
+		LayDuLieuChoBang();
+			List<SinhVien> list = svDao.TimKiemTatCaSinhVien(); 
+
+35. Xử lý lick vào 1 dòng trên bảng sẻ lấy dữ liệu lên trên 
+	+tbl_sinhVienMouseClicked
+
+36. Xử lý cập nhật lại dữ liệu cho bảng khu dùng chức năng tạo mới, lưu, cập nhật, xóa 
+	+ Thêm phương thức LayDuLieuChoBang() vào mỗi khi thông báo cập nhật . . . 
+	** Cần bổ sung chức nằng: kiểm tra nết nhập mới chỉ hiển thị lưu
+					kiểm tra đầy đủ các thông tin dữ liệu khi nhập vào
+
+----------------------QLDiem_Panel-------------
+37. Tạo class BangDiem trong packet model để lưu các thông tin về điểm của sinh viên
+
+38. Tạo class BangDiemDAO trong gói dao chứa các phương thức thêm xóa sử cập nhật cho bảng điểm
+	+ Tạo hàm Them();
+	+ xử lý sự kiện nút btn_nhapMoi
+	+ btn_luuActionPerformed(java.awt.event.ActionEvent evt)
+	+ Lưu ý khóa chính của bảng tự tăng
+	+ Khắc phục lỗi lưu nhiều lần trên 1 sv
+		Qua class BangDiemDAO để tạo các phương thức cần thiết để phục vụ 
+		Coppy Them() -> boolean CapNhat(BangDiem bd)
+		boolean Xoa(String maSinhVien)
+	+ Trả về bàng điểm khi tìm má số sv đó BangDiem TimKiemMaSinhVien(String maSinhVien)
+	+ Trả về danh sách bảng điểm sinh viên List<BangDiem> TimKiemTatCaBangDiem()
+	+ Tìm kiếm và trả về 3 sinh viên có điểm cao nhất List<BangDiem> TimKiemDiemCaoNhat(int top)
+	+
+		
+
+
+39. Xự kiện nút Lưu sẽ hỏi có muốn lưu không khi sinh viên đã có điểm sẵn trong csdl
+	+ void btn_luuActionPerformed
+
+40. Xử lý khi tìm mã sinh viên hiển thị họ tên ngay
+	Khi người dùng nhập điểm thì sẽ tính điểm trung bình các môn
+	+ txt_maSinhVien -> event -> focus -> focusLost -> void txt_maSinhVienFocusLost
+	+ Xử lý đtb sv void txt_tiengAnhFocusLost
+
+-------- Đã xảy ra lỗi tìm kh gặp -------Asg.P6: 57:12s
+41. Xử lý tìm kiếm sv trên thanh tìm kiếm ở QLDiem_Panel
+	+ void txt_timKiem_maSinhVienActionPerformed
+		Hiển thị luôn họ tên khi gọi lại sự kiện  txt_maSinhVienFocusLost(null);
+		Cập nhật lại điểm trung bình  xt_tiengAnhFocusLost(null);
+
+42. Đưa các chức năng cập nhật, xóa vào nút
+	void btn_xoaActionPerformed
+
+43. Xử lý hiển thị thông tin top 3 sv có điểm tb cao nhất ra bảng
+	+ Tạo  private DefaultTableModel tblModel;
+	+ Tạo phương thức TaoBangDiem();
+	+ Tạo phương thức tải bảng điểm lên   TaiBangDiem();
+	+ Gán   TaiBangDiem(); vào xự kiện 2 nút lưu, xóa.
+44. Cho phép người dùng chọn ảnh, lưu ảnh vào csdl, hiển thị lên
+	+ Tạo class AnhDaiDien trong gói databaseHepler
+	+ chuyển hình ảnh về mảng các byte[] byte[] toByteArray(Image img, String type)
+	+ chuyển mảng các byte[] thành đối tượng image trên lable giao diện 
+		Image TaoAnhFormByteArray(byte[] data, String type)
+	+ Xử lý sự kiện btn_moHinh
+45. Xử lý lưu hình vào csdl
+	+ Tạo  private byte[] anhDaiDien;
+	+ anhDaiDien = AnhDaiDien.toByteArray(img, "jpg"); line 599 
+	+ xử lý nút btn_taoMoi, btn_luu, btn_capNhat
+		thêm sv.setHinhDaiDien(anhDaiDien);
+	+ Xử lý khi click dưới bảng lấy hình lên
+		tbl_sinhVienMouseClicked
+	+ Qua SinhVienDAO chỉnh xử lý hình ảnh từ SinhVien TaoSinhVien(final ResultSet rs)
+		  sv.setHinhDaiDien(blob.getBytes(1, (int) blob.length()));
+46. Xử lú hiển thị tài khoảng người dùng đăng nhập với vai trò bên góc phải giao diện chính
+	+ Thêm jpanel và add 2 jlable vào trong
+	+ Tạo phương thức HienThiNguoiDangNhap();
+		add vào phương thức formWindowOpened & void btn_dangXuatActionPerformed
+47. Phân vai trò đăng nhập bổ sung trong HienThiNguoiDangNhap();
+	+ Giảng viên
+
+48. Fix error Đổi tài khoảng có vai trò giảng viên thì hiển thị QLSV_JPanel
+				vai trò đào tạo thì hiển thị QLDiem_JPanel
+				** mnuQLSV_JPanel = null;
+				** mnuQLDiem_JPanel = null;
+
+49. Fix lỗi tìm kiếm sinh viên bằng mã số sinh viên ở QLDiem_JPanel
+
+
+-----------------------Ràng buộc dữ liệu input -------------
+https://sera.typepad.com/blog/2015/07/ph%E1%BA%A7n-3-ki%E1%BB%83m-tra-t%C3%ADnh-h%E1%BB%A3p-l%E1%BB%87-c%E1%BB%A7a-d%E1%BB%AF-li%E1%BB%87u-ki%E1%BB%83m-tra-ph%E1%BA%A1m-vi-c%C3%A1c-k%C3%AD-t%E1%BB%B1.html
+https://www.youtube.com/watch?v=XFXDrfdgpjo
+		
+		
